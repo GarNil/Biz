@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Biz.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "bigfile.csv"
+    }
+  }
+}
