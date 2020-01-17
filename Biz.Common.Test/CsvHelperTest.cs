@@ -7,6 +7,7 @@ using AutoMapper;
 
 namespace Biz.Common.Test
 {
+
     public class CsvHelperTest
     {
         [Theory]
