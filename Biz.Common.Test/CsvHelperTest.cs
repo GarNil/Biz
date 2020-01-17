@@ -3,6 +3,7 @@ using CsvHelper;
 using System.IO;
 using System.Linq;
 using Xunit;
+using AutoMapper;
 
 namespace Biz.Common.Test
 {
@@ -22,7 +23,6 @@ namespace Biz.Common.Test
         {
             var count = CsvHelperProxy.ReadRows(Path.Combine("Assets", "bigfile.csv")).Count();
             Assert.Equal(expected, count);
-
         }
 
         [Theory]
@@ -87,6 +87,17 @@ namespace Biz.Common.Test
             foreach (var r in expected)
                 Assert.True(homeMade.Remove(r), r.ToString() + " NotFound");
             Assert.Empty(homeMade);
+
+            var automapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
+            homeMade = CsvHelperProxy
+                .ReadRows(filepath)
+                .Select(automapper.Map<RowModel>)
+                .Skip(1)
+                .Where(m => m != null).ToList();
+            foreach (var r in expected)
+                Assert.True(homeMade.Remove(r), r.ToString() + " NotFound");
+            Assert.Empty(homeMade);
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Biz.Common;
+﻿using AutoMapper;
+using Biz.Common;
 using System;
 using System.Linq;
 
@@ -13,11 +14,12 @@ namespace Biz.Console
                 System.Console.WriteLine("Please a file path is necessary !");
                 Environment.Exit(-1);
             }
-            var mapper = new RowModelMapper();
+
+            var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
 
             var csvRows = CsvHelperProxy
                 .ReadRows(args[0])
-                .Select(mapper.Map)
+                .Select(mapper.Map<RowModel>)
                 .Skip(1)
                 .Where(m => m != null);
 
