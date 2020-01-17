@@ -11,6 +11,27 @@ namespace Biz.Common
         public int? ColumnC { get; set; }
         public int? ColumnD { get; set; }
         public string OtherColumn { get; set; }
+        public int LineNumber { get; set; }
+
+        public string ConcatAB { get => SumCD.HasValue && SumCD.Value > 100 ? ColumnA + ColumnB : null; }
+
+        public int? SumCD { get => ColumnC.HasValue && ColumnD.HasValue ? ColumnC.Value + ColumnD.Value : (int?)null; }
+
+        public string Message
+        {
+            get
+            {
+                if (!ColumnC.HasValue)
+                    return "Column C is missing or has bad format";
+                if (!ColumnD.HasValue)
+                    return "Column D is missing or has bad format";
+                if (ConcatAB == null)
+                    return "SumCD is lower or equal to 100";
+                return null;
+            }
+        }
+
+        public bool IsOk => Message == null;
 
         public bool Equals([AllowNull] RowModel other)
         {
@@ -22,7 +43,8 @@ namespace Biz.Common
                 && string.Equals(ColumnB, other.ColumnB)
                 && ColumnC == other.ColumnC
                 && ColumnD == other.ColumnD
-                && string.Equals(OtherColumn, other.OtherColumn);
+                && string.Equals(OtherColumn, other.OtherColumn)
+                && LineNumber == LineNumber;
         }
 
         public override bool Equals(object obj)
@@ -39,8 +61,8 @@ namespace Biz.Common
                 hashCode = (hashCode * 397) ^ (ColumnC?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (ColumnD?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (OtherColumn?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ LineNumber;
                 return hashCode;
-
             }
         }
 

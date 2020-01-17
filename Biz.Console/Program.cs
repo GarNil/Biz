@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Biz.Common;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 
@@ -17,17 +18,29 @@ namespace Biz.Console
 
             var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
 
-            var csvRows = CsvHelperProxy
+            var jsonRows = CsvHelperProxy
                 .ReadRows(args[0])
-                .Select(mapper.Map<RowModel>)
+                .Select((v, i) => mapper.Map<RowModel>((i, v)))
                 .Skip(1)
-                .Where(m => m != null);
+                .Where(m => m != null)
+                .Select(mapper.Map<JsonRowModel>)
+;
 
-            foreach (var csvRow in csvRows)
+            var settings = new JsonSerializerSettings
             {
-                if (csvRow.ColumnC.HasValue && csvRow.ColumnD.HasValue && csvRow.ColumnC.Value + csvRow.ColumnD.Value > 100)
-                    System.Console.WriteLine(csvRow.ColumnA + csvRow.ColumnB);
+                Formatting = Formatting.None,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            System.Console.WriteLine("[");
+            string comma = string.Empty;
+            foreach (var jsonRow in jsonRows)
+            {
+                var r = JsonConvert.SerializeObject(jsonRow, settings);
+                System.Console.WriteLine($"{comma}{r}");
+                if (comma == string.Empty)//It s ugly... shame on me... :(
+                    comma = ",";
             }
+            System.Console.WriteLine("]");
             System.Console.WriteLine("Press any key...");
             System.Console.ReadKey();
         }
