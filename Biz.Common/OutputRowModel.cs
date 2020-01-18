@@ -29,5 +29,8 @@ namespace Biz.Common
 
         public override string ToString()
             => ConcatAB;
+
+        public bool ShouldSerializeSumCD() 
+            => SumCD.HasValue; 
     }
 }

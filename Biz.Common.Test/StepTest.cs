@@ -13,6 +13,7 @@ namespace Biz.Common.Test
         [Theory]
         [InlineData(1, "bigfile.csv", "step1.txt")]
         [InlineData(2, "bigfile.csv", "step2.txt")]//=>not json ext to avoid auto formatting
+        [InlineData(3, "bigfile.csv", "step3.txt")]//=>not xml ext to avoid auto formatting
         public void CheckStep(int stepNumber, string inputFileName, string expectedFileName)
         {
             var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
@@ -37,11 +38,20 @@ namespace Biz.Common.Test
                             .Select(mapper.Map<OutputRowModel>)
                         );
                     break;
+                case 3:
+                    rows = new XmlFormatterEnumerableOutputRowModel()
+                        .Serialize(
+                            CsvHelperProxy.ReadRows(Path.Combine("Assets", inputFileName))
+                            .Skip(1)
+                            .Select((v, i) => mapper.Map<RowModel>((i, v)))
+                            .Select(mapper.Map<OutputRowModel>)
+                        );
+                    break;
                 default:
                     break;
             }
-            
-            //using (var s = new StreamWriter(File.OpenWrite(@"c:\temp\totototo.json")))
+
+            //using (var s = new StreamWriter(File.OpenWrite(@"c:\temp\totototo.xml")))
             //{
             //    foreach (var row in rows)
             //        s.WriteLine(row);
