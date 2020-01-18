@@ -13,11 +13,11 @@ namespace Biz.Common.Test
                 Formatting = Formatting.None,
                 NullValueHandling = NullValueHandling.Ignore
             };
-            var jsonOk = new JsonRowModel { ErrorMessage = null, ConcatAB = "toto", LineNumber = 52, SumCD = 666, Type = KindOfType.ok };
+            var jsonOk = new OutputRowModel { ErrorMessage = null, ConcatAB = "toto", LineNumber = 52, SumCD = 666, Type = KindOfType.ok };
             var result = JsonConvert.SerializeObject(jsonOk, settings);
             Assert.Equal(@"{""lineNumber"":52,""type"":""ok"",""concatAB"":""toto"",""sumCD"":666}", result);
 
-            var jsonKo = new JsonRowModel { ErrorMessage = "Error", ConcatAB = null, LineNumber = 52, SumCD = null, Type = KindOfType.error };
+            var jsonKo = new OutputRowModel { ErrorMessage = "Error", ConcatAB = null, LineNumber = 52, SumCD = null, Type = KindOfType.error };
             result = JsonConvert.SerializeObject(jsonKo, settings);
             Assert.Equal(@"{""lineNumber"":52,""type"":""error"",""errorMessage"":""Error""}", result);
         }

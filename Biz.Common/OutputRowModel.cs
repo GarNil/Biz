@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Biz.Common
@@ -13,7 +9,7 @@ namespace Biz.Common
         error = 2
     }
 
-    public class JsonRowModel
+    public class OutputRowModel
     {
         [JsonProperty("lineNumber")]
         public int LineNumber { get; set; }
@@ -30,5 +26,8 @@ namespace Biz.Common
 
         [JsonProperty("errorMessage")]
         public string ErrorMessage { get; set; }
+
+        public override string ToString()
+            => ConcatAB;
     }
 }

@@ -32,7 +32,7 @@ namespace Biz.Common
                 .ForMember(dest => dest.LineNumber, opt => opt.MapFrom(v => v.i))
                 ;
 
-            _ = cfg.CreateMap<RowModel, JsonRowModel>()
+            _ = cfg.CreateMap<RowModel, OutputRowModel>()
                             .ForMember(dest => dest.Type, opt => opt.MapFrom(v => v.IsOk ? KindOfType.ok : KindOfType.error))
                             .ForMember(dest => dest.ConcatAB, opt => opt.MapFrom(v => v.ConcatAB))
                             .ForMember(dest => dest.LineNumber, opt => opt.MapFrom(v => v.LineNumber))

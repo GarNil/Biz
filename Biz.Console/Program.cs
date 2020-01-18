@@ -18,29 +18,23 @@ namespace Biz.Console
 
             var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
 
-            var jsonRows = CsvHelperProxy
+            var rows = new PlainTextFormatterEnumerableOutputRowModel().Serialize(CsvHelperProxy
                 .ReadRows(args[0])
-                .Select((v, i) => mapper.Map<RowModel>((i, v)))
                 .Skip(1)
-                .Where(m => m != null)
-                .Select(mapper.Map<JsonRowModel>)
-;
+                .Select((v, i) => mapper.Map<RowModel>((i, v)))
+                .Select(mapper.Map<OutputRowModel>)
+                );
+            //var rows = new JsonFormatterEnumerableOutputRowModel().Serialize(CsvHelperProxy
+            //    .ReadRows(args[0])
+            //    .Skip(1)
+            //    .Select((v, i) => mapper.Map<RowModel>((i, v)))
+            //    .Select(mapper.Map<OutputRowModel>)
+            //    );
 
-            var settings = new JsonSerializerSettings
+            foreach (var row in rows)
             {
-                Formatting = Formatting.None,
-                NullValueHandling = NullValueHandling.Ignore
-            };
-            System.Console.WriteLine("[");
-            string comma = string.Empty;
-            foreach (var jsonRow in jsonRows)
-            {
-                var r = JsonConvert.SerializeObject(jsonRow, settings);
-                System.Console.WriteLine($"{comma}{r}");
-                if (comma == string.Empty)//It s ugly... shame on me... :(
-                    comma = ",";
+                System.Console.WriteLine($"{row}");
             }
-            System.Console.WriteLine("]");
             System.Console.WriteLine("Press any key...");
             System.Console.ReadKey();
         }
