@@ -15,6 +15,7 @@ namespace Biz.Console
             Json = 2,
             Xml = 3
         }
+
         public class ApplicationArguments
         {
             public string File { get; set; }
@@ -23,7 +24,6 @@ namespace Biz.Console
 
         static void Main(string[] args)
         {
-            // create a generic parser for the ApplicationArguments type
             var p = new FluentCommandLineParser<ApplicationArguments>();
 
             p.Setup(arg => arg.File)
@@ -51,10 +51,10 @@ namespace Biz.Console
                     return new JsonFormatterEnumerableOutputRowModel();
                 case OutputType.Xml:
                     return new XmlFormatterEnumerableOutputRowModel();
-                //case OutputType.PlainText:
-                //    return new PlainTextFormatterEnumerableOutputRowModel();
+                case OutputType.PlainText:
+                    return new PlainTextFormatterEnumerableOutputRowModel();
             }
-            return new PlainTextFormatterEnumerableOutputRowModel();
+            return null;
         }
 
         public static void Run(ApplicationArguments arg) {
