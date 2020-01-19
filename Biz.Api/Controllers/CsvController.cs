@@ -13,11 +13,11 @@ namespace Biz.Api.Controllers
     public class CsvController : ControllerBase
     {
         [HttpGet]
-        public async Task GetCsvAsync([FromQuery, Required] string csvUri)
-            => await Task.CompletedTask;
+        public async Task<string> GetCsvAsync([FromQuery, Required] string csvUri)
+            => await Task.FromResult(string.Empty);
 
         [HttpPost]
-        public async Task PostCsvAsync([FromBody] string csvUri)
-            => await Task.CompletedTask;
+        public async Task<string> PostCsvAsync([FromBody] string csvUri)
+            => await Task.FromResult(string.Empty);
     }
 }

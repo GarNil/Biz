@@ -1,5 +1,4 @@
-﻿using Biz.Console;
-using System;
+﻿using System;
 using System.Linq;
 using Xunit;
 
@@ -10,9 +9,9 @@ namespace Biz.Common.Test
         [Fact]
         public void CheckCoverAllOutputsGetFormatter()
         {
-            foreach (var outputType in Enum.GetValues(typeof(Program.OutputType)).Cast<Program.OutputType>())
+            foreach (var outputType in Enum.GetValues(typeof(OutputType)).Cast<OutputType>())
             {
-                var formatter = Program.GetFormatter(outputType);
+                var formatter = outputType.GetFormatter();
                 Assert.NotNull(formatter);
                 Assert.IsAssignableFrom<IFormatterEnumerable>(formatter);
             }

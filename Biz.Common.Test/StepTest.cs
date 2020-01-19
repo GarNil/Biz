@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using Biz.Console;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace Biz.Common.Test
@@ -18,7 +15,7 @@ namespace Biz.Common.Test
         public void CheckStep(int stepNumber, string inputFileName, string expectedFileName)
         {
             var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
-            var formatter = Program.GetFormatter((Program.OutputType)stepNumber);
+            var formatter = ((OutputType)stepNumber).GetFormatter();
             var rows = formatter.Serialize(
                             CsvHelperProxy.ReadRows(Path.Combine("Assets", inputFileName))
                             .Skip(1)

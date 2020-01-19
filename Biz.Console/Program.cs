@@ -1,20 +1,13 @@
 ﻿using AutoMapper;
 using Biz.Common;
 using Fclp;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 
 namespace Biz.Console
 {
-    public class Program
+    public  class Program
     {
-        public enum OutputType
-        {
-            PlainText = 1,
-            Json = 2,
-            Xml = 3
-        }
 
         public class ApplicationArguments
         {
@@ -43,25 +36,11 @@ namespace Biz.Console
             Run(p.Object);
         }
 
-        public static IFormatterEnumerable<OutputRowModel> GetFormatter(OutputType type)
-        {
-            switch (type)
-            {
-                case OutputType.Json:
-                    return new JsonFormatterEnumerableOutputRowModel();
-                case OutputType.Xml:
-                    return new XmlFormatterEnumerableOutputRowModel();
-                case OutputType.PlainText:
-                    return new PlainTextFormatterEnumerableOutputRowModel();
-            }
-            return null;
-        }
-
         public static void Run(ApplicationArguments arg) {
 
             var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
 
-            var rows = GetFormatter(arg.OutputType).Serialize(CsvHelperProxy
+            var rows = arg.OutputType.GetFormatter().Serialize(CsvHelperProxy
                 .ReadRows(arg.File)
                 .Skip(1)
                 .Select((v, i) => mapper.Map<RowModel>((i, v)))
