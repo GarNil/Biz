@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Biz.Console
 {
-    class Program
+    public class Program
     {
         public enum OutputType
         {

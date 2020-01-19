@@ -1,9 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Biz.Common
 {
-    public interface IFormatterEnumerable<T> where T : class
+    public interface IFormatterEnumerable
     {
-        public abstract IEnumerable<string> Serialize(IEnumerable<T> rows);
+        IEnumerable<string> Serialize(IEnumerable rows);
+    }
+
+
+    public interface IFormatterEnumerable<T> : IFormatterEnumerable
+    {
+        IEnumerable<string> Serialize(IEnumerable<T> rows);
     }
 }

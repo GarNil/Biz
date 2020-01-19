@@ -6,8 +6,7 @@ using System.Xml.Serialization;
 
 namespace Biz.Common
 {
-    public abstract class XmlFormatterEnumerable<T> : IFormatterEnumerable<T>
-        where T : class
+    public abstract class XmlFormatterEnumerable<T> : FormatterEnumerable<T>
     {
         private readonly XmlSerializer serializer = new XmlSerializer(typeof(T), "");
         private readonly XmlSerializerNamespaces namespaces; 
@@ -20,7 +19,7 @@ namespace Biz.Common
             settings.OmitXmlDeclaration = true;
         }
 
-        public IEnumerable<string> Serialize(IEnumerable<T> rows)
+        public override IEnumerable<string> Serialize(IEnumerable<T> rows)
         {
             yield return "<List>";
             foreach (var row in rows.Where(j => j != null))

@@ -3,10 +3,9 @@ using System.Linq;
 
 namespace Biz.Common
 {
-    public abstract class PlainTextFormatterEnumerable<T> : IFormatterEnumerable<T>
-        where T : class
+    public abstract class PlainTextFormatterEnumerable<T> : FormatterEnumerable<T>
     {
-        public IEnumerable<string> Serialize(IEnumerable<T> rows)
+        public override IEnumerable<string> Serialize(IEnumerable<T> rows)
         {
             foreach (var row in rows.Where(r => r != null))
             {

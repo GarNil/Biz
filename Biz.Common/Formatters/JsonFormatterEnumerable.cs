@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Biz.Common
 {
-    public abstract class JsonFormatterEnumerable<T> : IFormatterEnumerable<T>
-        where T : class
+    public abstract class JsonFormatterEnumerable<T> : FormatterEnumerable<T>
     {
         private readonly JsonSerializerSettings _settings = new JsonSerializerSettings
         {
@@ -13,7 +13,7 @@ namespace Biz.Common
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public IEnumerable<string> Serialize(IEnumerable<T> rows)
+        public override IEnumerable<string> Serialize(IEnumerable<T> rows)
         {
             yield return "[";
             string comma = string.Empty;
