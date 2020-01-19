@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using Microsoft.Extensions.PlatformAbstractions;
+using Biz.Api.Formatters;
 
 namespace Biz.Api
 {
@@ -24,7 +25,11 @@ namespace Biz.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddMvc()
+            services.AddMvc(options =>
+                    {
+                        options.InputFormatters.Add(new TextPlainInputFormatter());
+                        //options.OutputFormatter.Add()
+                    })
                     .AddNewtonsoftJson()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 

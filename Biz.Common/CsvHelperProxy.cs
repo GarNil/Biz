@@ -96,6 +96,13 @@ namespace Biz.Common
             }
         }
 
+        //public static IEnumerable<string[]> ReadRows(StringReader stringReader, string separator = DefaultSeparator)
+        //{
+        //    while (stringReader)
+        //    while (!stringReader.)
+        //        yield return sr.ReadLine().Split(separator);
+        //}
+
         //public static IObservable<(string[] n, int i)> ReadRowsObservable(string path, string separator = DefaultSeparator)
         //    => ReadRows(path, separator).Select((n, i) => (n, i)).ToObservable();
         public static IObservable<string[]> ReadRowsObservable(string path, string separator = DefaultSeparator)

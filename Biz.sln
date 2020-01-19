@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biz.Common.Test", "Biz.Comm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biz.Common", "Biz.Common\Biz.Common.csproj", "{2ABC8632-047A-4C2B-A365-4318D99AAD03}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workers", "Workers", "{0FDAFCA9-CBAC-4878-8B6D-CE6BD17FA8E4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{0FDAFCA9-CBAC-4878-8B6D-CE6BD17FA8E4}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		..\.github\workflows\dotnetcore.yml = ..\.github\workflows\dotnetcore.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biz.Api", "Biz.Api\Biz.Api.csproj", "{BB9FE109-10B2-4457-8551-A0AC02B69ECA}"
