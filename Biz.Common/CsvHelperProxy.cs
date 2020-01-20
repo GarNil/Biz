@@ -6,13 +6,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-
+using System.Text;
 
 namespace Biz.Common
 {
     public static class CsvHelperProxy
     {
         private const string DefaultSeparator = ";";
+        private const byte SemiColon = 59;
 
         private static CsvConfiguration Configuration(ClassMap map, string delimiter = DefaultSeparator)
         {
@@ -23,10 +24,9 @@ namespace Biz.Common
             return config;
         }
 
-
         /// <summary>
         /// A try to challenge the ReadRows method 
-        /// FAILED -> More rows of code, More complexity and less perf... (maybe better in memory)
+        /// FAILED -> More rows of code, More complexity and less perf... (maybe better in memory??)
         /// </summary>
         /// <param name="path"></param>
         /// <param name="sizeBuffer"></param>
@@ -80,28 +80,49 @@ namespace Biz.Common
 
         public static IEnumerable<string[]> ReadRows(string path, string separator = DefaultSeparator)
         {
-            using (var sr = new StreamReader(File.OpenRead(path)))
+            using (var stream = File.OpenRead(path))
+            {
+                foreach (var result in ReadRowsFromStream(stream, separator))
+                    yield return result;
+            }
+        }
+
+        public async static IAsyncEnumerable<string[]> ReadRowsAsync(string path, string separator = DefaultSeparator)
+        {
+            using (var stream = File.OpenRead(path))
+            {
+                await foreach (var result in ReadRowsFromStreamAsync(stream, separator))
+                    yield return result;
+            }
+        }
+
+        public static IEnumerable<string[]> ReadRowsContent(string input, string separator = DefaultSeparator)
+        {
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(input)))
+            {
+                foreach (var result in ReadRowsFromStream(stream, separator))
+                    yield return result;
+            }
+        }
+
+        public static IEnumerable<string[]> ReadRowsFromStream(Stream stream, string separator = DefaultSeparator)
+        {
+            using (var sr = new StreamReader(stream))
             {
                 while (!sr.EndOfStream)
                     yield return sr.ReadLine().Split(separator);
             }
         }
 
-        public async static IAsyncEnumerable<string[]> ReadRowsAsync(string path, string separator = DefaultSeparator)
+        public async static IAsyncEnumerable<string[]> ReadRowsFromStreamAsync(Stream stream, string separator = DefaultSeparator)
         {
-            using (var sr = new StreamReader(File.OpenRead(path)))
+            using (var sr = new StreamReader(stream))
             {
                 while (!sr.EndOfStream)
                     yield return (await sr.ReadLineAsync()).Split(separator);
             }
         }
 
-        //public static IEnumerable<string[]> ReadRows(StringReader stringReader, string separator = DefaultSeparator)
-        //{
-        //    while (stringReader)
-        //    while (!stringReader.)
-        //        yield return sr.ReadLine().Split(separator);
-        //}
 
         //public static IObservable<(string[] n, int i)> ReadRowsObservable(string path, string separator = DefaultSeparator)
         //    => ReadRows(path, separator).Select((n, i) => (n, i)).ToObservable();

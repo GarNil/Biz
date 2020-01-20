@@ -21,24 +21,32 @@ namespace Biz.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<string> GetCsvAsync([FromQuery, Required] string csvUri)
-            => await Task.FromResult(string.Empty);
+        [Produces("application/json")]
+        public async Task<IEnumerable<OutputRowModel>> GetCsvAsync([FromQuery, Required] string csvUri)
+        {
+            var response = await ServiceHttpClient.GetAsync(csvUri);
+            var result = Enumerable.Empty<OutputRowModel>();
+            using (var stream = await response.Content.ReadAsStreamAsync())
+            {
+                result = CsvHelperProxy.ReadRowsFromStream(stream)
+                        .Skip(1)
+                        .Select((v, i) => Mapper.Map<RowModel>((i, v)))
+                        .Select(Mapper.Map<OutputRowModel>).ToList();
+            }
+            return await Task.FromResult(result);
+        }
 
         [HttpPost]
-        public async Task<string> PostCsvAsync([FromBody] string csv)
+        [Produces("application/json")]
+        [Consumes("text/plain")]
+        public async Task<IEnumerable<OutputRowModel>> PostCsvAsync([FromBody] string csv)
         {
+            var result = CsvHelperProxy.ReadRowsFromStream(csv.ToStream())
+                        .Skip(1)
+                        .Select((v, i) => Mapper.Map<RowModel>((i, v)))
+                        .Select(Mapper.Map<OutputRowModel>);
 
-            var result = Enumerable.Empty<string>();
-            //using (var stream = new StringReader(csv))
-            //{
-            //    result = OutputType.Json.GetFormatter().Serialize(CsvHelperProxy
-            //        .ReadRows(stream.BaseStream)
-            //        .Skip(1)
-            //        .Select((v, i) => Mapper.Map<RowModel>((i, v)))
-            //        .Select(Mapper.Map<OutputRowModel>)
-            //    );
-            //}
-            return await Task.FromResult(string.Join("", result));
+            return await Task.FromResult(result);
         }
     }
 }

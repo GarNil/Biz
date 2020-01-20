@@ -10,9 +10,12 @@ namespace Biz.Api.Formatters
 {
     //https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/custom-formatters?view=aspnetcore-3.1
     //=>https://github.com/aspnet/Entropy/blob/master/samples/Mvc.Formatters/TextPlainInputFormatter.cs
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class TextPlainInputFormatter : TextInputFormatter
     {
+        ///
         public TextPlainInputFormatter()
         {
             SupportedMediaTypes.Add("text/plain");
@@ -20,11 +23,22 @@ namespace Biz.Api.Formatters
             SupportedEncodings.Add(UTF16EncodingLittleEndian);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         protected override bool CanReadType(Type type)
         {
             return type == typeof(string);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
         public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
         {
             string data = null;
