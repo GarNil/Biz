@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using Microsoft.Extensions.PlatformAbstractions;
+using Biz.Api.Formatters;
+using Newtonsoft.Json;
 
 namespace Biz.Api
 {
@@ -24,8 +26,18 @@ namespace Biz.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddMvc()
-                    .AddNewtonsoftJson()
+            services.AddMvc(options =>
+                    {
+                        options.InputFormatters.Add(new TextPlainInputFormatter());
+                        //options.RespectBrowserAcceptHeader = false;
+                        //options.ReturnHttpNotAcceptable = true;
+                        //options.OutputFormatter.Add(new JsonOutputF)
+                    })
+                    .AddNewtonsoftJson(s => 
+                    {
+                        s.SerializerSettings.Formatting = Formatting.None;
+                        s.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddSwaggerGen(c =>
