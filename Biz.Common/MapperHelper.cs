@@ -6,6 +6,39 @@ using System.Text;
 
 namespace Biz.Common
 {
+    public class AutoMapping : Profile
+    {
+        public AutoMapping()
+        {
+            CreateMap<string[], RowModel>()
+                .ForMember(dest => dest.Column, opt => opt.MapFrom(v => v.Length > 0 ? v[0] : string.Empty))
+                .ForMember(dest => dest.ColumnA, opt => opt.MapFrom(v => v.Length > 1 ? v[1] : string.Empty))
+                .ForMember(dest => dest.ColumnB, opt => opt.MapFrom(v => v.Length > 2 ? v[2] : string.Empty))
+                .ForMember(dest => dest.ColumnC, opt => opt.MapFrom(v => v.Length > 3 ? MapperHelper.ConvertToNullableInt(v[3]) : null))
+                .ForMember(dest => dest.ColumnD, opt => opt.MapFrom(v => v.Length > 4 ? MapperHelper.ConvertToNullableInt(v[4]) : null))
+                .ForMember(dest => dest.OtherColumn, opt => opt.MapFrom(v => v.Length > 5 ? v[5] : string.Empty))
+                ;
+
+            CreateMap<(string[] v, int i), RowModel>()
+                .ForMember(dest => dest.Column, opt => opt.MapFrom(v => v.v.Length > 0 ? v.v[0] : string.Empty))
+                .ForMember(dest => dest.ColumnA, opt => opt.MapFrom(v => v.v.Length > 1 ? v.v[1] : string.Empty))
+                .ForMember(dest => dest.ColumnB, opt => opt.MapFrom(v => v.v.Length > 2 ? v.v[2] : string.Empty))
+                .ForMember(dest => dest.ColumnC, opt => opt.MapFrom(v => v.v.Length > 3 ? MapperHelper.ConvertToNullableInt(v.v[3]) : null))
+                .ForMember(dest => dest.ColumnD, opt => opt.MapFrom(v => v.v.Length > 4 ? MapperHelper.ConvertToNullableInt(v.v[4]) : null))
+                .ForMember(dest => dest.OtherColumn, opt => opt.MapFrom(v => v.v.Length > 5 ? v.v[5] : string.Empty))
+                .ForMember(dest => dest.LineNumber, opt => opt.MapFrom(v => v.i))
+                ;
+
+            CreateMap<RowModel, OutputRowModel>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(v => v.IsOk ? KindOfType.ok : KindOfType.error))
+                .ForMember(dest => dest.ConcatAB, opt => opt.MapFrom(v => v.ConcatAB))
+                .ForMember(dest => dest.LineNumber, opt => opt.MapFrom(v => v.LineNumber))
+                .ForMember(dest => dest.SumCD, opt => opt.MapFrom(v => v.Message == null ? v.SumCD : null))
+                .ForMember(dest => dest.ErrorMessage, opt => opt.MapFrom(v => v.Message))
+                ;
+        }
+    }
+
     public static class MapperHelper
     {
         public static int? ConvertToNullableInt(string value)

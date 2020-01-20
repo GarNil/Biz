@@ -11,9 +11,11 @@ namespace Biz.Api.Controllers
     [ApiController]
     public class CsvController : ControllerBase
     {
-        private IMapper Mapper
+        private readonly IMapper _mapper;
+
+        public CsvController(IMapper mapper) 
         {
-            get => new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -23,7 +25,7 @@ namespace Biz.Api.Controllers
             var result = Enumerable.Empty<OutputRowModel>();
             using (var stream = await response.Content.ReadAsStreamAsync())
             {
-                result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(Mapper).ToList();
+                result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(_mapper).ToList();
             }
             return Ok(result);
         }
@@ -35,7 +37,7 @@ namespace Biz.Api.Controllers
             var result = Enumerable.Empty<OutputRowModel>();
             using (var stream = csv.ToStream())
             {
-                result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(Mapper).ToList();
+                result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(_mapper).ToList();
             }
             return Ok(result);
         }

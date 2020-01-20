@@ -9,6 +9,8 @@ using System.IO;
 using Microsoft.Extensions.PlatformAbstractions;
 using Biz.Api.Formatters;
 using Newtonsoft.Json;
+using AutoMapper;
+using Biz.Common;
 
 namespace Biz.Api
 {
@@ -54,6 +56,7 @@ namespace Biz.Api
                     c.IncludeXmlComments(xmlPath);
             });
 
+            services.AddAutoMapper(typeof(AutoMapping));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
