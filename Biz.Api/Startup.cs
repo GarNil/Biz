@@ -42,7 +42,8 @@ namespace Biz.Api
                 s.SerializerSettings.Formatting = Formatting.None;
                 s.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            .AddXmlSerializerFormatters();
 
             services.AddSwaggerGen(c =>
             {

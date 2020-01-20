@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Biz.Common;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Biz.Api.Controllers
@@ -21,8 +17,7 @@ namespace Biz.Api.Controllers
         }
 
         [HttpGet]
-        [Produces("application/json")]
-        public async Task<IEnumerable<OutputRowModel>> GetCsvAsync([FromQuery, Required] string csvUri)
+        public async Task<ObjectResult> GetCsvAsync([FromQuery, Required] string csvUri)
         {
             var response = await ServiceHttpClient.GetAsync(csvUri);
             var result = Enumerable.Empty<OutputRowModel>();
@@ -30,20 +25,19 @@ namespace Biz.Api.Controllers
             {
                 result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(Mapper).ToList();
             }
-            return await Task.FromResult(result);
+            return Ok(result);
         }
 
         [HttpPost]
-        [Produces("application/json")]
         [Consumes("text/plain")]
-        public async Task<IEnumerable<OutputRowModel>> PostCsvAsync([FromBody] string csv)
+        public async Task<ObjectResult> PostCsvAsync([FromBody] string csv)
         {
             var result = Enumerable.Empty<OutputRowModel>();
             using (var stream = csv.ToStream())
             {
                 result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(Mapper).ToList();
             }
-            return await Task.FromResult(result);
+            return Ok(result);
         }
 
         //[HttpGet]
