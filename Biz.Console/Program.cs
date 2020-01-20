@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using Biz.Common;
 using Fclp;
+using Serilog;
 using System;
-using System.Linq;
 
 namespace Biz.Console
 {
     public  class Program
     {
-
         public class ApplicationArguments
         {
             public string File { get; set; }
@@ -17,6 +16,10 @@ namespace Biz.Console
 
         static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+
             var p = new FluentCommandLineParser<ApplicationArguments>();
 
             p.Setup(arg => arg.File)
@@ -36,8 +39,8 @@ namespace Biz.Console
             Run(p.Object);
         }
 
-        public static void Run(ApplicationArguments arg) {
-
+        public static void Run(ApplicationArguments arg) 
+        {
             var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
 
             var rows = arg.OutputType.GetFormatter().Serialize(CsvHelperProxy

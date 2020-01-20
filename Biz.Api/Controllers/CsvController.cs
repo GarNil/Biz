@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Biz.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Biz.Api.Controllers
 {
@@ -12,15 +13,19 @@ namespace Biz.Api.Controllers
     public class CsvController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly ILogger<CsvController> _logger;
 
-        public CsvController(IMapper mapper) 
+
+        public CsvController(IMapper mapper, ILogger<CsvController> logger) 
         {
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<ObjectResult> GetCsvAsync([FromQuery, Required] string csvUri)
         {
+            _logger.LogDebug($"GetCsvAsync({csvUri}");
             var response = await ServiceHttpClient.GetAsync(csvUri);
             var result = Enumerable.Empty<OutputRowModel>();
             using (var stream = await response.Content.ReadAsStreamAsync())
@@ -34,6 +39,7 @@ namespace Biz.Api.Controllers
         [Consumes("text/plain")]
         public async Task<ObjectResult> PostCsvAsync([FromBody] string csv)
         {
+            _logger.LogDebug($"PostCsvAsync({csv}");
             var result = Enumerable.Empty<OutputRowModel>();
             using (var stream = csv.ToStream())
             {
