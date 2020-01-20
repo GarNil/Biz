@@ -22,7 +22,7 @@ namespace Biz.Common
                             .ForMember(dest => dest.OtherColumn, opt => opt.MapFrom(v => v.Length > 5 ? v[5] : string.Empty))
                             ;
 
-            _ = cfg.CreateMap<(int i, string[] v), RowModel>()
+            _ = cfg.CreateMap<(string[] v, int i), RowModel>()
                 .ForMember(dest => dest.Column, opt => opt.MapFrom(v => v.v.Length > 0 ? v.v[0] : string.Empty))
                 .ForMember(dest => dest.ColumnA, opt => opt.MapFrom(v => v.v.Length > 1 ? v.v[1] : string.Empty))
                 .ForMember(dest => dest.ColumnB, opt => opt.MapFrom(v => v.v.Length > 2 ? v.v[2] : string.Empty))

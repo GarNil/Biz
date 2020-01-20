@@ -28,10 +28,7 @@ namespace Biz.Api.Controllers
             var result = Enumerable.Empty<OutputRowModel>();
             using (var stream = await response.Content.ReadAsStreamAsync())
             {
-                result = CsvHelperProxy.ReadRowsFromStream(stream)
-                        .Skip(1)
-                        .Select((v, i) => Mapper.Map<RowModel>((i, v)))
-                        .Select(Mapper.Map<OutputRowModel>).ToList();
+                result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(Mapper).ToList();
             }
             return await Task.FromResult(result);
         }
@@ -41,12 +38,37 @@ namespace Biz.Api.Controllers
         [Consumes("text/plain")]
         public async Task<IEnumerable<OutputRowModel>> PostCsvAsync([FromBody] string csv)
         {
-            var result = CsvHelperProxy.ReadRowsFromStream(csv.ToStream())
-                        .Skip(1)
-                        .Select((v, i) => Mapper.Map<RowModel>((i, v)))
-                        .Select(Mapper.Map<OutputRowModel>);
-
+            var result = Enumerable.Empty<OutputRowModel>();
+            using (var stream = csv.ToStream())
+            {
+                result = CsvHelperProxy.ReadRowsFromStream(stream).ToResult(Mapper).ToList();
+            }
             return await Task.FromResult(result);
         }
+
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public async IAsyncEnumerable<OutputRowModel> GetCsvAsync([FromQuery, Required] string csvUri)
+        //{
+        //    var response = await ServiceHttpClient.GetAsync(csvUri);
+        //    using (var stream = await response.Content.ReadAsStreamAsync())
+        //    {
+        //        await foreach (var r in CsvHelperProxy.ReadRowsFromStreamAsync(stream).ToResultAsync(Mapper))
+        //            yield return r;
+        //    }
+        //}
+
+        //[HttpPost]
+        //[Produces("application/json")]
+        //[Consumes("text/plain")]
+        //public async IAsyncEnumerable<OutputRowModel> PostCsvAsync([FromBody] string csv)
+        //{
+        //    using (var stream = csv.ToStream())
+        //    {
+        //        await foreach (var r in CsvHelperProxy.ReadRowsFromStreamAsync(stream).ToResultAsync(Mapper))
+        //            yield return r;
+        //    }
+        //}
+
     }
 }

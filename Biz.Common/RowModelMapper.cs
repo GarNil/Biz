@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Biz.Common
 {
-
     public class RowModelMapper : ICsvRowMapper<RowModel>
     {
-        public RowModel Map(string[] values)
+        public RowModel Map((string[] v, int i) value)
         {
+            var values = value.v;
             if (values == null || values.Length == 0)
                 return null;
             int i = 0;

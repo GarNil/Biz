@@ -18,9 +18,7 @@ namespace Biz.Common.Test
             var formatter = ((OutputType)stepNumber).GetFormatter();
             var rows = formatter.Serialize(
                             CsvHelperProxy.ReadRows(Path.Combine("Assets", inputFileName))
-                            .Skip(1)
-                            .Select((v, i) => mapper.Map<RowModel>((i, v)))
-                            .Select(mapper.Map<OutputRowModel>)
+                            .ToResult(mapper)
                 );
 
             //using (var s = new StreamWriter(File.OpenWrite(@"c:\temp\totototo.xml")))

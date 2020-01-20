@@ -41,10 +41,7 @@ namespace Biz.Console
             var mapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
 
             var rows = arg.OutputType.GetFormatter().Serialize(CsvHelperProxy
-                .ReadRows(arg.File)
-                .Skip(1)
-                .Select((v, i) => mapper.Map<RowModel>((i, v)))
-                .Select(mapper.Map<OutputRowModel>)
+                .ReadRows(arg.File).ToResult(mapper)
                 );
 
             foreach (var row in rows)

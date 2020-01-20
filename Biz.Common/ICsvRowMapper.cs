@@ -2,6 +2,6 @@
 {
     public interface ICsvRowMapper<TResult>
     {
-        TResult Map(string[] values);
+        TResult Map((string[] v, int i) values);
     }
 }

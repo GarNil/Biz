@@ -32,8 +32,9 @@ namespace Biz.Common
         /// <param name="sizeBuffer"></param>
         /// <param name="separator"></param>
         /// <returns></returns>
-        public static IEnumerable<string[]> ReadRowsLowLevel(string path, int sizeBuffer = 4096, string separator = DefaultSeparator)
+        public static IEnumerable<(string[] v, int i)> ReadRowsLowLevel(string path, int sizeBuffer = 4096, string separator = DefaultSeparator)
         {
+            int j = -1;
             using (var stream = File.OpenRead(path))
             {
                 const byte CR = 13;
@@ -54,7 +55,7 @@ namespace Biz.Common
                             case LF:
                                 if (prevIndex != index)
                                 {
-                                    yield return new string(chars, prevIndex, index - prevIndex).Split(separator);
+                                    yield return (new string(chars, prevIndex, index - prevIndex).Split(separator), j++);
                                     prevIndex = index;
                                 }
                                 break;
@@ -72,13 +73,11 @@ namespace Biz.Common
                     sizeToRead = stream.Read(buffer, 0, buffer.Length);
                 }
                 if (prevIndex != index)
-                {
-                    yield return new string(chars, prevIndex, index - prevIndex).Split(separator);
-                }
+                    yield return (new string(chars, prevIndex, index - prevIndex).Split(separator), j++);
             }
         }
 
-        public static IEnumerable<string[]> ReadRows(string path, string separator = DefaultSeparator)
+        public static IEnumerable<(string[] v, int i)> ReadRows(string path, string separator = DefaultSeparator)
         {
             using (var stream = File.OpenRead(path))
             {
@@ -87,7 +86,7 @@ namespace Biz.Common
             }
         }
 
-        public async static IAsyncEnumerable<string[]> ReadRowsAsync(string path, string separator = DefaultSeparator)
+        public async static IAsyncEnumerable<(string[] v, int i)> ReadRowsAsync(string path, string separator = DefaultSeparator)
         {
             using (var stream = File.OpenRead(path))
             {
@@ -96,7 +95,7 @@ namespace Biz.Common
             }
         }
 
-        public static IEnumerable<string[]> ReadRowsContent(string input, string separator = DefaultSeparator)
+        public static IEnumerable<(string[] v, int i)> ReadRowsContent(string input, string separator = DefaultSeparator)
         {
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(input)))
             {
@@ -105,28 +104,27 @@ namespace Biz.Common
             }
         }
 
-        public static IEnumerable<string[]> ReadRowsFromStream(Stream stream, string separator = DefaultSeparator)
+        public static IEnumerable<(string[] v, int i)> ReadRowsFromStream(Stream stream, string separator = DefaultSeparator)
         {
+            int i = -1;
             using (var sr = new StreamReader(stream))
             {
                 while (!sr.EndOfStream)
-                    yield return sr.ReadLine().Split(separator);
+                    yield return (sr.ReadLine().Split(separator), i++);
             }
         }
 
-        public async static IAsyncEnumerable<string[]> ReadRowsFromStreamAsync(Stream stream, string separator = DefaultSeparator)
+        public async static IAsyncEnumerable<(string[] v, int i)> ReadRowsFromStreamAsync(Stream stream, string separator = DefaultSeparator)
         {
+            int i = -1;
             using (var sr = new StreamReader(stream))
             {
                 while (!sr.EndOfStream)
-                    yield return (await sr.ReadLineAsync()).Split(separator);
+                    yield return ((await sr.ReadLineAsync()).Split(separator), i++);
             }
         }
 
-
-        //public static IObservable<(string[] n, int i)> ReadRowsObservable(string path, string separator = DefaultSeparator)
-        //    => ReadRows(path, separator).Select((n, i) => (n, i)).ToObservable();
-        public static IObservable<string[]> ReadRowsObservable(string path, string separator = DefaultSeparator)
+        public static IObservable<(string[] v, int i)> ReadRowsObservable(string path, string separator = DefaultSeparator)
             => ReadRows(path, separator).ToObservable();
 
         

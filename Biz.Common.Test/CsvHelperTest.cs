@@ -92,7 +92,7 @@ namespace Biz.Common.Test
             var automapper = new MapperConfiguration(cfg => _ = MapperHelper.Configure(cfg)).CreateMapper();
             homeMade = CsvHelperProxy
                 .ReadRows(filepath)
-                .Select(automapper.Map<RowModel>)
+                .Select(v => automapper.Map<RowModel>(v))
                 .Skip(1)
                 .Where(m => m != null).ToList();
             foreach (var r in expected)
